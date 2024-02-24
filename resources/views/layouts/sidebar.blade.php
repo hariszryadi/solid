@@ -5,7 +5,7 @@
             <span class="hide-menu">Home</span>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+            <a class="sidebar-link {{ request()->is('home') ? 'active' : '' }}" href="{{ route('home') }}" aria-expanded="false">
                 <span>
                     <i class="ti ti-layout-dashboard"></i>
                 </span>
@@ -17,7 +17,7 @@
             <span class="hide-menu">MASTER</span>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
+            <a class="sidebar-link {{ request()->is('category') || request()->is('category/*') ? 'active' : '' }}" href="{{ route('category.index') }}" aria-expanded="false">
                 <span>
                     <i class="ti ti-article"></i>
                 </span>
