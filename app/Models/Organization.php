@@ -13,4 +13,9 @@ class Organization extends Model
         'name',
         'address'
     ];
+
+    public function account()
+    {
+        return $this->hasMany(Account::class);
+    }
 }
