@@ -10,14 +10,14 @@
             <div class="card-body">
                 @include('helper.alert')
                 <div class="text-right">
-                    <a href="{{ route('category.create') }}" class="btn btn-info"><span><i class="ti ti-plus"></i></span>&nbsp;Tambah</a>
+                    <a href="{{ route('organization.create') }}" class="btn btn-info"><span><i class="ti ti-plus"></i></span>&nbsp;Tambah</a>
                 </div>
                 <table class="table datatable-basic">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Nama</th>
-                            <th>Deskripsi</th>
+                            <th>Alamat</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -25,18 +25,18 @@
                         @php
                             $i = 1;
                         @endphp
-                        @foreach ($companies as $item)
+                        @foreach ($organizations as $item)
                             <tr>
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $item->name }}</td>
-                                <td>{{ $item->description }}</td>
+                                <td>{{ $item->address }}</td>
                                 <td class="text-center">
-                                    <a href="{{ route('category.edit', $item->id) }}" class="btn btn-sm btn-success">
+                                    <a href="{{ route('organization.edit', $item->id) }}" class="btn btn-sm btn-success">
                                         <span>
                                             <i class="ti ti-pencil"></i>
                                         </span>
                                     </a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-danger delete" data-url="{{ route('category.destroy', $item->id) }}">
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-danger delete" data-url="{{ route('organization.destroy', $item->id) }}">
                                         <span>
                                             <i class="ti ti-trash"></i>
                                         </span>

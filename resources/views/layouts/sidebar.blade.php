@@ -25,7 +25,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
+            <a class="sidebar-link {{ request()->is('organization') || request()->is('organization/*') ? 'active' : '' }}" href="{{ route('organization.index') }}" aria-expanded="false">
                 <span>
                     <i class="ti ti-building-community"></i>
                 </span>
