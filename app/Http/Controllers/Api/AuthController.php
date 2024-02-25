@@ -18,7 +18,7 @@ class AuthController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('jwt', ['except' => ['login', 'register']]);
+        $this->middleware('jwt', ['except' => ['login', 'register', 'category', 'organization']]);
     }
 
     /**
@@ -49,28 +49,35 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:accounts',
-            'password' => 'required|string|confirmed|min:6',
-            'role' => 'required|in:user,pic',
-            'organization' => 'required|exists:organizations,id'
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|between:2,100',
+                'email' => 'required|string|email|max:100|unique:accounts',
+                'password' => 'required|string|confirmed|min:6',
+                'role' => 'required|in:user,pic',
+                'organization' => 'required|exists:organizations,id'
+            ]);
 
-        if($validator->fails()){
-            return response()->json($validator->errors(), 400);
+            if($validator->fails()){
+                return response()->json($validator->errors(), 400);
+            }
+
+            $account = Account::create(array_merge(
+                        $validator->validated(),
+                        ['password' => bcrypt($request->password)],
+                        ['organization_id' => $request->organization]
+            ));
+            $account->sendEmailVerificationNotification();
+
+            return response()->json([
+                'message' => 'Registrasi akun berhasil, silahkan check email',
+                'account' => $account
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e,
+            ], 500);
         }
-
-        $account = Account::create(array_merge(
-                    $validator->validated(),
-                    ['password' => bcrypt($request->password)],
-                    ['organization_id' => $request->organization]
-                ));
-
-        return response()->json([
-            'message' => 'Registrasi akun berhasil',
-            'account' => $account
-        ], 201);
     }
 
     /**
@@ -121,6 +128,36 @@ class AuthController extends Controller
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
             'account' => Auth::guard('api')->user($account)
         ]);
+    }
+
+    /**
+     * Verify email.
+     */
+    public function verify($account_id, Request $request) {
+        if (!$request->hasValidSignature()) {
+            return response()->json(["msg" => "Invalid/Expired url provided."], 401);
+        }
+
+        $account = Account::findOrFail($account_id);
+
+        if (!$account->hasVerifiedEmail()) {
+            $account->markEmailAsVerified();
+        }
+
+        return response()->json(['message' => 'Email berhasil diverifikasi']);
+    }
+
+    /**
+     * Resend verify email.
+     */
+    public function resend() {
+        if (auth()->user()->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email sudah terverifikasi'], 400);
+        }
+
+        Auth::guard('api')->user()->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'Email verifikasi berhasil dikirim']);
     }
 
     /**
