@@ -23,5 +23,5 @@ Route::get('/account-profile', [AuthController::class, 'accountProfile']);
 Route::get('/category', [AuthController::class, 'category']);
 Route::get('/organization', [AuthController::class, 'organization']);
 
-Route::get('email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
-Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+Route::get('email/verify/{id}', [AuthController::class, 'verify'])->name('verification.verify');
+Route::get('email/resend/{id}', [AuthController::class, 'resend'])->name('verification.resend');

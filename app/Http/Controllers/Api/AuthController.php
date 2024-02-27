@@ -18,7 +18,7 @@ class AuthController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('jwt', ['except' => ['login', 'register', 'category', 'organization']]);
+        $this->middleware('jwt', ['except' => ['login', 'register', 'verify', 'resend', 'category', 'organization']]);
     }
 
     /**
@@ -96,7 +96,17 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function refresh() {
-        return $this->createNewToken(Auth::guard('api')->refresh());
+        // return $this->createNewToken(Auth::guard('api')->refresh());
+
+        $account = Auth::guard('api')->user();
+        $account->load('organization');
+
+        return response()->json([
+            'token' => Auth::guard('api')->refresh(),
+            'token_type' => 'bearer',
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'account' => $account
+        ]);
     }
 
     /**
@@ -126,7 +136,7 @@ class AuthController extends Controller
             'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
-            'account' => Auth::guard('api')->user($account)
+            'account' => $account
         ]);
     }
 
@@ -150,12 +160,13 @@ class AuthController extends Controller
     /**
      * Resend verify email.
      */
-    public function resend() {
-        if (auth()->user()->hasVerifiedEmail()) {
+    public function resend($account_id) {
+        $account = Account::find($account_id);
+        if ($account->email_verified_at != null) {
             return response()->json(['message' => 'Email sudah terverifikasi'], 400);
         }
 
-        Auth::guard('api')->user()->sendEmailVerificationNotification();
+        $account->sendEmailVerificationNotification();
 
         return response()->json(['message' => 'Email verifikasi berhasil dikirim']);
     }

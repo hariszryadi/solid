@@ -1,5 +1,7 @@
 <?php
 namespace App\Models;
+
+use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -58,6 +60,16 @@ class Account extends Authenticatable implements JWTSubject, MustVerifyEmail
      */
     public function getJWTCustomClaims() {
         return [];
+    }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 
     public function organization()
