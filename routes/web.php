@@ -19,6 +19,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/verify-email-success', function () {
+    return view('email.verify-email-success');
+});
+
+Route::get('/verify-email-failed', function () {
+    return view('email.verify-email-failed');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

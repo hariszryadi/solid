@@ -145,7 +145,8 @@ class AuthController extends Controller
      */
     public function verify($account_id, Request $request) {
         if (!$request->hasValidSignature()) {
-            return response()->json(["msg" => "Invalid/Expired url provided."], 401);
+            // return response()->json(['message' => 'Invalid/Expired url provided.'], 401);
+            return view('email.verify-email-failed', ['message' => 'Email gagal diverifikasi.', 'sub_message' => 'Silahkan hubungi Administrator Aplikasi SOLID']);
         }
 
         $account = Account::findOrFail($account_id);
@@ -154,7 +155,8 @@ class AuthController extends Controller
             $account->markEmailAsVerified();
         }
 
-        return response()->json(['message' => 'Email berhasil diverifikasi']);
+        // return response()->json(['message' => 'Email berhasil diverifikasi.']);
+        return view('email.verify-email-success', ['message' => 'Email berhasil diverifikasi.', 'sub_message' => 'Silahkan buka kembail Aplikasi SOLID']);
     }
 
     /**
@@ -163,7 +165,7 @@ class AuthController extends Controller
     public function resend($account_id) {
         $account = Account::find($account_id);
         if ($account->email_verified_at != null) {
-            return response()->json(['message' => 'Email sudah terverifikasi'], 400);
+            return response()->json(['message' => 'Email sudah terverifikasi.'], 400);
         }
 
         $account->sendEmailVerificationNotification();

@@ -226,3 +226,32 @@ ul.breadcrumb li a:hover {
     border-color: #4DC243 !important;
 }
 
+.img-verify-email-header {
+    width: 100%;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+}
+
+.img-verify-email-footer {
+    width: 100%;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+}
+
+@media only screen and (min-width: 900px) {
+    .img-verify-email-header, .img-verify-email-footer {
+        margin-top: -80px;
+        margin-bottom: -80px;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .img-verify-email-header, .img-verify-email-footer {
+        margin-top: -100px;
+        margin-bottom: -100px;
+    }
+}
