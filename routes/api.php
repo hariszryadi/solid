@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,3 +26,5 @@ Route::get('/organization', [AuthController::class, 'organization']);
 
 Route::get('email/verify/{id}', [AuthController::class, 'verify'])->name('verification.verify');
 Route::get('email/resend/{id}', [AuthController::class, 'resend'])->name('verification.resend');
+
+Route::post('/transaction/store', [TransactionController::class, 'store']);
