@@ -28,3 +28,4 @@ Route::get('email/verify/{id}', [AuthController::class, 'verify'])->name('verifi
 Route::get('email/resend/{id}', [AuthController::class, 'resend'])->name('verification.resend');
 
 Route::post('/transaction/store', [TransactionController::class, 'store']);
+Route::post('/transaction/report', [TransactionController::class, 'report']);
