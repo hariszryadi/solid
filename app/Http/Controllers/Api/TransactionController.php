@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class TransactionController extends Controller
@@ -58,11 +59,12 @@ class TransactionController extends Controller
     public function report(Request $request)
     {
         try {
+            $account = Auth::guard('api')->user();
             $categories = Category::orderBy('id')->get();
 
             $response = [];
             foreach ($categories as $key => $category) {
-                $amount = Transaction::where('category_id', $category->id)->where('created_at', '>=', $request->start_date)->where('created_at', '<=', $request->end_date)->count();
+                $amount = Transaction::where('account_id', $account->id)->where('category_id', $category->id)->where('created_at', '>=', $request->start_date)->where('created_at', '<=', $request->end_date)->sum('weight');
                 array_push($response, ['category' => $category->name, 'amount' => $amount]);
             }
 

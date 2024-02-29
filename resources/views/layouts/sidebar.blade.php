@@ -49,19 +49,11 @@
             <span class="hide-menu">USER</span>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
+            <a class="sidebar-link {{ request()->is('account') || request()->is('account/*') ? 'active' : '' }}" href="{{ route('account.index') }}" aria-expanded="false">
                 <span>
                     <i class="ti ti-users"></i>
                 </span>
-                <span class="hide-menu">Account</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
-                <span>
-                    <i class="ti ti-user-check"></i>
-                </span>
-                <span class="hide-menu">Role</span>
+                <span class="hide-menu">Akun</span>
             </a>
         </li>
         <li class="sidebar-item">
