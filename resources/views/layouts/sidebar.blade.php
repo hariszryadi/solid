@@ -57,7 +57,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
+            <a class="sidebar-link {{ request()->is('user-admin') || request()->is('user-admin/*') ? 'active' : '' }}" href="{{ route('user-admin.index') }}" aria-expanded="false">
                 <span>
                     <i class="ti ti-user"></i>
                 </span>

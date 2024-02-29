@@ -7,7 +7,7 @@
             <li>{{ $title }}</li>
         </ul>
         <div class="card">
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 @include('helper.alert')
                 <table class="table datatable-basic">
                     <thead>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\UserAdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,3 +35,4 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('category', CategoryController::class);
 Route::resource('organization', OrganizationController::class);
 Route::resource('account', AccountController::class);
+Route::resource('user-admin', UserAdminController::class);
