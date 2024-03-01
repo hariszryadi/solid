@@ -29,6 +29,14 @@ Route::get('/verify-email-failed', function () {
     return view('email.verify-email-failed');
 });
 
+Route::get('/user/login', function () {
+    return view('frontend.login');
+})->name('user.login');
+
+Route::get('/user/register', function () {
+    return view('frontend.register');
+})->name('user.register');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

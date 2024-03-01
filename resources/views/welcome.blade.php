@@ -12,8 +12,8 @@
                 <p class="text-primary fw-semibold">Aplikasi monitoring pengolahan sampah</p>
             </div>
             <div class="d-flex justify-content-between" style="overflow: auto">
-                <a href="#" class="btn btn-primary" style="padding: 10px 40px">Login</a>
-                <a href="#" class="btn btn-primary" style="padding: 10px 40px">Register</a>
+                <a href="{{ route('user.login') }}" class="btn btn-primary w-50 py-8 fs-4 m-2 rounded-2">Login</a>
+                <a href="{{ route('user.register') }}" class="btn btn-primary w-50 py-8 fs-4 m-2 rounded-2">Register</a>
             </div>
         </div>
     </div>
