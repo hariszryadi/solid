@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FrontEndController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserAdminController;
 use Illuminate\Support\Facades\Route;
@@ -17,9 +19,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('index');
+Route::get('/', [FrontEndController::class, 'index'])->name('index');
+Route::get('/user/register', [FrontEndController::class, 'register'])->name('user.register');
 
 Route::get('/verify-email-success', function () {
     return view('email.verify-email-success');
@@ -33,13 +34,9 @@ Route::get('/user/login', function () {
     return view('frontend.login');
 })->name('user.login');
 
-Route::get('/user/register', function () {
-    return view('frontend.register');
-})->name('user.register');
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::resource('category', CategoryController::class);
 Route::resource('organization', OrganizationController::class);
 Route::resource('account', AccountController::class);

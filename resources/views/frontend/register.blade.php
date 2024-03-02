@@ -26,6 +26,23 @@
                     <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                     <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi Password">
                 </div>
+                <div class="mb-4">
+                    <label for="role" class="form-label">Role</label>
+                    <select name="role" class="form-control" id="role">
+                        <option value="" selected disabled>Pilih</option>
+                        <option value="user">User</option>
+                        <option value="pic">PIC</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="organization" class="form-label">Instansi</label>
+                    <select name="organization" class="form-control select2" id="organization">
+                        <option value="" selected disabled>Pilih</option>
+                        @foreach ($response as $item)
+                            <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="d-flex justify-content-between">
                     <a class="btn btn-light w-50 py-8 fs-4 m-2 rounded-2">Kembali</a>
                     <button type="submit" class="btn btn-primary w-50 py-8 fs-4 m-2 rounded-2">Daftar</button>

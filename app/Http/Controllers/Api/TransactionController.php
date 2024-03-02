@@ -54,9 +54,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * Report transaction waste.
+     * Report transaction waste by month.
      */
-    public function report(Request $request)
+    public function report_month(Request $request)
     {
         try {
             $account = Auth::guard('api')->user();
@@ -64,7 +64,30 @@ class TransactionController extends Controller
 
             $response = [];
             foreach ($categories as $key => $category) {
-                $amount = Transaction::where('account_id', $account->id)->where('category_id', $category->id)->where('created_at', '>=', $request->start_date)->where('created_at', '<=', $request->end_date)->sum('weight');
+                $amount = Transaction::where('account_id', $account->id)->where('category_id', $category->id)->whereDate('created_at', '>=', $request->start_date)->whereDate('created_at', '<=', $request->end_date)->sum('weight');
+                array_push($response, ['category' => $category->name, 'amount' => $amount]);
+            }
+
+            return response()->json($response, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e,
+            ], 500);
+        }
+    }
+
+    /**
+     * Report transaction waste by date.
+     */
+    public function report_date(Request $request)
+    {
+        try {
+            $account = Auth::guard('api')->user();
+            $categories = Category::orderBy('id')->get();
+
+            $response = [];
+            foreach ($categories as $key => $category) {
+                $amount = Transaction::where('account_id', $account->id)->where('category_id', $category->id)->whereDate('created_at', $request->date)->sum('weight');
                 array_push($response, ['category' => $category->name, 'amount' => $amount]);
             }
 

@@ -242,6 +242,26 @@ ul.breadcrumb li a:hover {
     right:0;
 }
 
+.select2 {
+    border: 1px solid #DFE5EF;
+    border-radius: 7px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 8px;
+}
+
+.select2-container--default .select2-selection--single {
+    border: none !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 34px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #5A6A85 !important;
+}
+
 @media only screen and (min-width: 900px) {
     .img-verify-email-header, .img-verify-email-footer {
         margin-top: -80px;
