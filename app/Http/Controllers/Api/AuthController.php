@@ -27,20 +27,27 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request){
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required|string|min:6',
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            if (!$token = Auth::guard('api')->attempt($validator->validated())) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            return $this->createNewToken($token);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        if (!$token = Auth::guard('api')->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->createNewToken($token);
     }
 
     /**
@@ -56,10 +63,30 @@ class AuthController extends Controller
                 'password' => 'required|string|confirmed|min:6',
                 'role' => 'required|in:user,pic',
                 'organization' => 'required|exists:organizations,id'
+            ], [
+                'name.required' => 'Nama harus diisi',
+                'name.string' => 'Nama harus bertipe string',
+                'name.between' => 'Nama harus minimal :min karakter dan maksimal :max karakter',
+                'email.required' => 'Email harus diisi',
+                'email.string' => 'Email harus bertipe string',
+                'email.email' => 'Email harus berupa alamat email yang valid',
+                'email.max' => 'Email tidak boleh melebihi :max karakter',
+                'email.unique' => 'Email sudah digunakan',
+                'password.required' => 'Password harus diisi',
+                'password.string' => 'Password harus bertipe string',
+                'password.confirmed' => 'Password konfirmasi tidak cocok',
+                'password.min' => 'Password tidak boleh kurang dari :min karakter',
+                'role.required' => 'Role harus diisi',
+                'role.in' => 'Role harus valid',
+                'organization.required' => 'Instansi harus diisi',
+                'organization.exists' => 'Instansi harus valid',
             ]);
 
             if($validator->fails()){
-                return response()->json($validator->errors(), 400);
+                return response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first()
+                ], 400);
             }
 
             $account = Account::create(array_merge(
@@ -70,12 +97,14 @@ class AuthController extends Controller
             $account->sendEmailVerificationNotification();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Registrasi akun berhasil, silahkan check email',
-                'account' => $account
-            ], 201);
+                'data' => $account
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e,
+                'success' => false,
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -86,8 +115,15 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout() {
-        Auth::guard('api')->logout();
-        return response()->json(['message' => 'Akun berhasil melakukan logout']);
+        try {
+            Auth::guard('api')->logout();
+            return response()->json(['message' => 'Akun berhasil melakukan logout'], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -105,7 +141,7 @@ class AuthController extends Controller
             'token' => Auth::guard('api')->refresh(),
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
-            'account' => $account
+            'data' => $account
         ]);
     }
 
@@ -115,10 +151,21 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function accountProfile() {
-        $account = Auth::guard('api')->user();
-        $account->load('organization');
+        try {
+            $account = Auth::guard('api')->user();
+            $account->load('organization');
 
-        return response()->json($account);
+            return response()->json([
+                'success' => true,
+                'message' => 'Sukses mendapatkan data account',
+                'data' => $account
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -136,8 +183,8 @@ class AuthController extends Controller
             'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
-            'account' => $account
-        ]);
+            'data' => $account
+        ], 200);
     }
 
     /**
@@ -180,9 +227,20 @@ class AuthController extends Controller
      */
     public function category()
     {
-        $categories = Category::orderBy('id')->get();
+        try {
+            $categories = Category::orderBy('id')->get();
 
-        return response()->json($categories);
+            return response()->json([
+                'success' => true,
+                'message' => 'Sukses mendapatkan data kategori',
+                'data' => $categories
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -192,8 +250,19 @@ class AuthController extends Controller
      */
     public function organization()
     {
-        $organizaions = Organization::orderBy('id')->get();
+        try {
+            $organizaions = Organization::orderBy('id')->get();
 
-        return response()->json($organizaions);
+            return response()->json([
+                'success' => true,
+                'message' => 'Sukses mendapatkan data instansi',
+                'data' => $organizaions
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

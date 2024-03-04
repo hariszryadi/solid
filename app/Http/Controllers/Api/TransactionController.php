@@ -43,12 +43,14 @@ class TransactionController extends Controller
             ]);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Data sampah berhasil disimpan',
                 'data' => $data
-            ], 201);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e,
+                'succes' => false,
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -56,7 +58,7 @@ class TransactionController extends Controller
     /**
      * Report transaction waste by month.
      */
-    public function report_month(Request $request)
+    public function report_monthly(Request $request)
     {
         try {
             $account = Auth::guard('api')->user();
@@ -68,10 +70,15 @@ class TransactionController extends Controller
                 array_push($response, ['category' => $category->name, 'amount' => $amount]);
             }
 
-            return response()->json($response, 201);
+            return response()->json([
+                'success' => true,
+                'message' => 'Sukses mendapatkan data report bulanan',
+                'data' => $response
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e,
+                'success' => false,
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -79,7 +86,7 @@ class TransactionController extends Controller
     /**
      * Report transaction waste by date.
      */
-    public function report_date(Request $request)
+    public function report_daily(Request $request)
     {
         try {
             $account = Auth::guard('api')->user();
@@ -91,10 +98,15 @@ class TransactionController extends Controller
                 array_push($response, ['category' => $category->name, 'amount' => $amount]);
             }
 
-            return response()->json($response, 201);
+            return response()->json([
+                'success' => true,
+                'message' => 'Sukses mendapatkan data report harian',
+                'data' => $response
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e,
+                'success' => false,
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
