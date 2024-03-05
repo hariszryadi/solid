@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/libs/datatable/css/jquery.dataTables.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/libs/jquery/dist/jquery-ui-1.13.2/jquery-ui.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/libs/select2.min.css') }}" />
 </head>
 
 <body>
@@ -60,9 +61,10 @@
     <script src="{{ asset('assets/libs/jquery/dist/jquery-ui-1.13.2/jquery-ui.js') }}"></script>
     <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('assets/libs/sweetalert.js') }}"></script>
+    <script src="{{ asset('assets/libs/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/apexcharts.min.js') }}"></script>
 
     <script>
         // initialize datatable
@@ -79,36 +81,41 @@
 
         // Action delete
         $(document).on('click', '.delete', function () {
-        var url = $(this).attr('data-url');
+            var url = $(this).attr('data-url');
 
-        Swal.fire({
-            text: "Apakah anda yakin untuk menghapus data ini?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#D92626",
-            confirmButtonText: "Ya, Hapus!",
-            cancelButtonText: "Tidak"
-        }).then(function(result) {
-            if(result.value) {
-                $.ajax({
-                    url: url,
-                    method: "DELETE",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (resp) {
-                        Swal.fire('Success!', resp.success, 'success').then((result) => {
-                            // Reload the Page
-                            location.reload();
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        Swal.fire('Error!', xhr.responseText, 'error');
-                    }
-                })
-            }
+            Swal.fire({
+                text: "Apakah anda yakin untuk menghapus data ini?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#D92626",
+                confirmButtonText: "Ya, Hapus!",
+                cancelButtonText: "Tidak"
+            }).then(function(result) {
+                if(result.value) {
+                    $.ajax({
+                        url: url,
+                        method: "DELETE",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (resp) {
+                            Swal.fire('Success!', resp.success, 'success').then((result) => {
+                                // Reload the Page
+                                location.reload();
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire('Error!', xhr.responseText, 'error');
+                        }
+                    })
+                }
+            });
+        })
+
+        // Select2
+        $(document).ready(function() {
+            $('.select2').select2();
         });
-    })
     </script>
     @yield('scripts')
 

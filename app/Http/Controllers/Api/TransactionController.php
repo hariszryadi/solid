@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -36,10 +37,12 @@ class TransactionController extends Controller
                 return response()->json($validator->errors(), 422);
             }
 
+            $account = Account::find($request->account);
             $data = Transaction::create([
                 'account_id' => $request->account,
                 'weight' => $request->weight,
-                'category_id' => $request->category
+                'category_id' => $request->category,
+                'organization_id' => $account->organization_id
             ]);
 
             return response()->json([

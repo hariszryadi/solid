@@ -12,6 +12,7 @@ class Transaction extends Model
     protected $fillable = [
         'account_id',
         'weight',
-        'category_id'
+        'category_id',
+        'organization_id'
     ];
 }

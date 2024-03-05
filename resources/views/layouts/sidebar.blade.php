@@ -37,11 +37,19 @@
             <span class="hide-menu">REPORT</span>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+            <a class="sidebar-link {{ request()->is('report-daily') || request()->is('report-daily-result') ? 'active' : '' }}" href="{{ route('report-daily') }}" aria-expanded="false">
                 <span>
                     <i class="ti ti-file-report"></i>
                 </span>
-                <span class="hide-menu">Debit</span>
+                <span class="hide-menu">Harian</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link {{ request()->is('report-monthly') || request()->is('report-monthly-result') ? 'active' : '' }}" href="{{ route('report-monthly') }}" aria-expanded="false">
+                <span>
+                    <i class="ti ti-file-report"></i>
+                </span>
+                <span class="hide-menu">Bulanan</span>
             </a>
         </li>
         <li class="nav-small-cap">

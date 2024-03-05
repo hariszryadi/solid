@@ -262,6 +262,10 @@ ul.breadcrumb li a:hover {
     color: #5A6A85 !important;
 }
 
+.has-error .select2-container {
+    border-color: rgb(250, 137, 107) !important;
+}
+
 @media only screen and (min-width: 900px) {
     .img-verify-email-header, .img-verify-email-footer {
         margin-top: -80px;
