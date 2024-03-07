@@ -6,6 +6,7 @@ use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserAdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::resource('category', CategoryController::class);
 Route::resource('organization', OrganizationController::class);
 Route::resource('account', AccountController::class);
+Route::resource('transaction', TransactionController::class);
 Route::resource('user-admin', UserAdminController::class);
 Route::get('/report-daily', [ReportController::class, 'daily'])->name('report-daily');
 Route::post('/report-daily-result', [ReportController::class, 'daily_result'])->name('report-daily-result');

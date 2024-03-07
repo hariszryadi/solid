@@ -18,4 +18,9 @@ class Organization extends Model
     {
         return $this->hasMany(Account::class);
     }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

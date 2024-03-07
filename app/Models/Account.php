@@ -76,4 +76,9 @@ class Account extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->belongsTo(Organization::class);
     }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }
