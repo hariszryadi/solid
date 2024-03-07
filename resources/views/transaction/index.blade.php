@@ -13,6 +13,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Tanggal</th>
                             <th>Nama</th>
                             <th>Instansi</th>
                             <th>Berat</th>
@@ -27,6 +28,7 @@
                         @foreach ($transactions as $item)
                             <tr>
                                 <td>{{ $i++ }}</td>
+                                <td>{{ $item->created_at->format('d M Y') }}</td>
                                 <td>{{ $item->account->name }}</td>
                                 <td>{{ $item->organization->name }}</td>
                                 <td>{{ $item->weight }} kg</td>
