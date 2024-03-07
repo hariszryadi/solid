@@ -84,6 +84,21 @@ class AccountController extends Controller
             'password' => 'nullable|min:6|confirmed',
             'role' => 'required|in:user,pic',
             'organization' => 'required|exists:organizations,id'
+        ], [
+            'name.required' => 'Nama harus diisi',
+            'name.string' => 'Nama harus bertipe string',
+            'name.between' => 'Nama harus minimal :min karakter dan maksimal :max karakter',
+            'email.required' => 'Email harus diisi',
+            'email.string' => 'Email harus bertipe string',
+            'email.email' => 'Email harus berupa alamat email yang valid',
+            'email.max' => 'Email tidak boleh melebihi :max karakter',
+            'email.unique' => 'Email sudah digunakan',
+            'password.confirmed' => 'Password konfirmasi tidak cocok',
+            'password.min' => 'Password tidak boleh kurang dari :min karakter',
+            'role.required' => 'Role harus diisi',
+            'role.in' => 'Role harus valid',
+            'organization.required' => 'Instansi harus diisi',
+            'organization.exists' => 'Instansi harus valid',
         ]);
 
         $password = '';

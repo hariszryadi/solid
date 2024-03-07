@@ -10,6 +10,7 @@
         <div class="card">
             <div class="card-body">
                 <a href="{{ route('report-daily') }}" class="btn btn-warning">Kembali</a>
+                <button type="button" class="btn btn-danger" id="printPdf" disabled>Print PDF</button>
                 <div id="chart" class="mt-5"></div>
             </div>
         </div>
@@ -18,6 +19,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script>
     var dates = {!! json_encode($dates) !!};
     var organic = {!! json_encode($organic) !!};
@@ -34,12 +36,17 @@
           name: 'B3',
           data: b3
         }],
-          chart: {
+        chart: {
           type: 'bar',
           height: 350,
           stacked: true,
           toolbar: {
             show: false
+          },
+          events: {
+            mounted: function(chartContext, config) {
+              $('#printPdf').removeAttr('disabled')
+            }
           }
         },
         responsive: [{
@@ -58,11 +65,11 @@
             // borderRadius: 10,
             dataLabels: {
               total: {
-                enabled: true,
-                style: {
-                  fontSize: '13px',
-                  fontWeight: 900
-                }
+                enabled: false,
+                // style: {
+                //   fontSize: '13px',
+                //   fontWeight: 900
+                // }
               }
             }
           },
@@ -82,5 +89,28 @@
 
     var chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render();
+
+    $('#printPdf').on('click', function () {
+        chart.dataURI().then(({ imgURI, blob }) => {
+            var pdf = new jsPDF('landscape', 'pt', 'a4');
+            var pdfWidth = pdf.internal.pageSize.getWidth();
+            var pdfHeight = pdf.internal.pageSize.getHeight();
+            var imgWidth = 750;
+            var imgHeight = 250;
+            var imgX = (pdfWidth - imgWidth) / 2;
+            var imgY = (pdfHeight - imgHeight) / 3;
+            pdf.addImage(imgURI, 'PNG', imgX, imgY, imgWidth, imgHeight);
+
+            var text = 'Debit Volume Sampah Harian berdasarkan Kategorinya';
+            var textWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+            var textX = imgX + (imgWidth - textWidth) / 2;
+            var textY = imgY + -30;
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFontSize(16);
+            pdf.text(text, textX, textY);
+            pdf.save('report-daily.pdf');
+        })
+    })
+
 </script>
 @endsection

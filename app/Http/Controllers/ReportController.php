@@ -135,7 +135,7 @@ class ReportController extends Controller
         foreach ($categories as $key => $category) {
             $transaction = Transaction::where('category_id', $category->id)->where('organization_id', $request->organization)->whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->sum('weight');
             array_push($categoryArr, $category->name);
-            array_push($seriesArr, $transaction);
+            array_push($seriesArr, floatval($transaction));
         }
 
         return view('report.monthly_result', ['title' => $this->title, 'categories' => $categoryArr, 'series' => $seriesArr]);

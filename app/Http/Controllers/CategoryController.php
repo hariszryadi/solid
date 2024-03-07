@@ -55,7 +55,12 @@ class CategoryController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:50',
             'description' => 'nullable|string|max:255',
-
+        ], [
+            'name.required' => 'Nama harus diisi',
+            'name.string' => 'Nama harus bertipe string',
+            'name.max' => 'Nama tidak boleh melebihi :max karakter',
+            'description.string' => 'Deskripsi harus bertipe string',
+            'description.max' => 'Deskripsi tidak boleh melebihi :max karakter',
         ]);
 
         Category::create([
@@ -94,6 +99,12 @@ class CategoryController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:50',
             'description' => 'nullable|string|max:255',
+        ], [
+            'name.required' => 'Nama harus diisi',
+            'name.string' => 'Nama harus bertipe string',
+            'name.max' => 'Nama tidak boleh melebihi :max karakter',
+            'description.string' => 'Deskripsi harus bertipe string',
+            'description.max' => 'Deskripsi tidak boleh melebihi :max karakter',
         ]);
 
         $category = Category::find($id);

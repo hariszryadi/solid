@@ -31,10 +31,20 @@ class TransactionController extends Controller
                 'account' => 'required|exists:accounts,id',
                 'weight' => 'required|numeric',
                 'category' => 'required|exists:categories,id'
+            ], [
+                'account.required' => 'Akun harus diisi',
+                'account.exists' => 'Akun harus valid',
+                'weight.required' => 'Berat harus diisi',
+                'weight.numeric' => 'Berat harus berupa angka',
+                'category.required' => 'Kategori harus diisi',
+                'category.exists' => 'Kategori harus valid',
             ]);
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
+            if($validator->fails()){
+                return response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first()
+                ], 400);
             }
 
             $account = Account::find($request->account);

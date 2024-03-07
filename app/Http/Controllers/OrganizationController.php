@@ -55,7 +55,12 @@ class OrganizationController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:50',
             'address' => 'nullable|string|max:255',
-
+        ], [
+            'name.required' => 'Nama harus diisi',
+            'name.string' => 'Nama harus bertipe string',
+            'name.max' => 'Nama tidak boleh melebihi :max karakter',
+            'address.string' => 'Alamat harus bertipe string',
+            'address.max' => 'Alamat tidak boleh melebihi :max karakter',
         ]);
 
         Organization::create([
@@ -94,6 +99,12 @@ class OrganizationController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:50',
             'address' => 'nullable|string|max:255',
+        ], [
+            'name.required' => 'Nama harus diisi',
+            'name.string' => 'Nama harus bertipe string',
+            'name.max' => 'Nama tidak boleh melebihi :max karakter',
+            'address.string' => 'Alamat harus bertipe string',
+            'address.max' => 'Alamat tidak boleh melebihi :max karakter',
         ]);
 
         $organization = Organization::find($id);
