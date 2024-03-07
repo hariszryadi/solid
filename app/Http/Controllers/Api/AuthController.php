@@ -9,6 +9,7 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use JWTAuth;
 
 class AuthController extends Controller
 {
@@ -140,9 +141,9 @@ class AuthController extends Controller
         return response()->json([
             'token' => Auth::guard('api')->refresh(),
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60 * 24,
             'data' => $account
-        ]);
+        ], 200);
     }
 
     /**
@@ -182,7 +183,7 @@ class AuthController extends Controller
         return response()->json([
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60 * 24,
             'data' => $account
         ], 200);
     }
