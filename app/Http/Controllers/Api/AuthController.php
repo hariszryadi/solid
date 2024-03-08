@@ -32,14 +32,26 @@ class AuthController extends Controller
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
                 'password' => 'required|string|min:6',
+            ], [
+                'email.required' => 'Email harus diisi',
+                'email.email' => 'Email harus berupa alamat email yang valid',
+                'password.required' => 'Password harus diisi',
+                'password.string' => 'Password harus bertipe string',
+                'password.min' => 'Password tidak boleh kurang dari :min karakter',
             ]);
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
+            if($validator->fails()){
+                return response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first()
+                ], 400);
             }
 
             if (!$token = Auth::guard('api')->attempt($validator->validated())) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ], 400);
             }
 
             return $this->createNewToken($token);
@@ -141,7 +153,7 @@ class AuthController extends Controller
         return response()->json([
             'token' => Auth::guard('api')->refresh(),
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60 * 24,
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
             'data' => $account
         ], 200);
     }
@@ -183,7 +195,7 @@ class AuthController extends Controller
         return response()->json([
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60 * 24,
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
             'data' => $account
         ], 200);
     }
