@@ -4,7 +4,6 @@
 <div class="row">
     <div class="container-fluid">
         <ul class="breadcrumb">
-            <li><a href="{{ route('category.index') }}">{{ $title }}</a></li>
             <li>Bulanan</li>
           </ul>
         <div class="card">

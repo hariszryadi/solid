@@ -63,6 +63,43 @@ class ReportController extends Controller
     {
         $this->validate($request, [
             'organization' => 'required',
+            'date' => 'required'
+        ], [
+            'organization.required' => 'Instansi harus diisi',
+            'date.required' => 'Tanggal harus diisi'
+        ]);
+
+        $categoryArr = [];
+        $seriesArr = [];
+
+        $categories = Category::orderBy('id')->get();
+        foreach ($categories as $key => $category) {
+            $transaction = Transaction::where('category_id', $category->id)->where('organization_id', $request->organization)->whereDate('created_at', Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d'))->sum('weight');
+            
+            array_push($categoryArr, $category->name);
+            array_push($seriesArr, floatval($transaction));
+        }
+
+        return view('report.daily_result', ['title' => $this->title, 'categories' => $categoryArr, 'series' => $seriesArr]);
+    }
+
+    /**
+     * Display form filter for report.
+     */
+    public function monthly()
+    {
+        $organizations = Organization::orderBy('id')->get();
+        $years = Transaction::selectRaw('YEAR(created_at) as year')->distinct()->get();
+        return view('report.monthly', ['title' => $this->title, 'organizations' => $organizations, 'months' => $this->months, 'years' => $years]);
+    }
+
+    /**
+     * Display a chart of the resource.
+     */
+    public function monthly_result(Request $request)
+    {
+        $this->validate($request, [
+            'organization' => 'required',
             'month' => 'required',
             'year' => 'required',
         ], [
@@ -100,44 +137,6 @@ class ReportController extends Controller
             $currentDate->addDay();
         }
 
-        return view('report.daily_result', ['title' => $this->title, 'dates' => $dates, 'organic' => $organic, 'anorganic' => $anorganic, 'b3' => $b3]);
-    }
-
-    /**
-     * Display form filter for report.
-     */
-    public function monthly()
-    {
-        $organizations = Organization::orderBy('id')->get();
-        $years = Transaction::selectRaw('YEAR(created_at) as year')->distinct()->get();
-        return view('report.monthly', ['title' => $this->title, 'organizations' => $organizations, 'months' => $this->months, 'years' => $years]);
-    }
-
-    /**
-     * Display a chart of the resource.
-     */
-    public function monthly_result(Request $request)
-    {
-        $this->validate($request, [
-            'organization' => 'required',
-            'month' => 'required',
-            'year' => 'required',
-        ], [
-            'organization.required' => 'Instansi harus diisi',
-            'month.required' => 'Bulan harus diisi',
-            'year.required' => 'Tahun harus diisi'
-        ]);
-
-        $categoryArr = [];
-        $seriesArr = [];
-
-        $categories = Category::orderBy('id')->get();
-        foreach ($categories as $key => $category) {
-            $transaction = Transaction::where('category_id', $category->id)->where('organization_id', $request->organization)->whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->sum('weight');
-            array_push($categoryArr, $category->name);
-            array_push($seriesArr, floatval($transaction));
-        }
-
-        return view('report.monthly_result', ['title' => $this->title, 'categories' => $categoryArr, 'series' => $seriesArr]);
+        return view('report.monthly_result', ['title' => $this->title, 'dates' => $dates, 'organic' => $organic, 'anorganic' => $anorganic, 'b3' => $b3]);
     }
 }

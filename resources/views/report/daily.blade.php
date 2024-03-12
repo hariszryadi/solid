@@ -4,7 +4,6 @@
 <div class="row">
     <div class="container-fluid">
         <ul class="breadcrumb">
-            <li><a href="{{ route('category.index') }}">{{ $title }}</a></li>
             <li>Harian</li>
           </ul>
         <div class="card">
@@ -29,32 +28,11 @@
                             @enderror
                         </div>
                         <div class="col-3 mb-3">
-                            <div class="form-group @error('month') has-error @enderror">
-                                <label for="month" class="form-label">Bulan</label>
-                                <select name="month" class="form-control select2" id="month">
-                                    <option value="" selected disabled>Pilih</option>
-                                    @foreach ($months as $key => $item)
-                                        <option value="{{ $key }}" {{ old('month') == $key ? 'selected' : '' }}>{{ $item }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="form-group @error('date') has-error @enderror">
+                                <label for="date" class="form-label">Tanggal</label>
+                                <input type="text" class="form-control datepicker @error('date') is-invalid @enderror" id="date" name="date" value="{{ old('date') }}" placeholder="dd/mm/yyyy" autocomplete="off">
                             </div>
-                            @error('month')
-                                <div class="text-danger">
-                                    <strong>{{ $message }}</strong>
-                                </div>
-                            @enderror
-                        </div>
-                        <div class="col-3 mb-3">
-                            <div class="form-group @error('year') has-error @enderror">
-                                <label for="year" class="form-label">Tahun</label>
-                                <select name="year" class="form-control select2" id="year">
-                                    <option value="" selected disabled>Pilih</option>
-                                    @foreach ($years as $item)
-                                        <option value="{{ $item->year }}" {{ old('year') == $item->year ? 'selected' : '' }}>{{ $item->year }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('year')
+                            @error('date')
                                 <div class="text-danger">
                                     <strong>{{ $message }}</strong>
                                 </div>

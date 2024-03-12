@@ -47,6 +47,10 @@ class Kernel extends HttpKernel
         'jwt' => [
             \App\Http\Middleware\JwtMiddleware::class
         ],
+
+        'verifyApiToken' => [
+            \App\Http\Middleware\VerifyApiToken::class
+        ],
     ];
 
     /**
