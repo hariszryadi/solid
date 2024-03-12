@@ -23,12 +23,12 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::get('/account-profile', [AuthController::class, 'accountProfile']);
 Route::get('/category', [AuthController::class, 'category']);
 Route::get('/organization', [AuthController::class, 'organization']);
-
 Route::get('/email/resend/{id}', [AuthController::class, 'resend'])->name('verification.resend');
+Route::post('/forgot-password', [AuthController::class, 'forgot_password'])->name('forgot-password');
+Route::post('/reset-password', [AuthController::class, 'reset_password'])->name('reset-password');
+Route::post('/update-profile', [AuthController::class, 'update_profile'])->name('update-profile');
 
 Route::post('/transaction/store', [TransactionController::class, 'store']);
 Route::post('/transaction/report_monthly', [TransactionController::class, 'report_monthly']);
 Route::post('/transaction/report_daily', [TransactionController::class, 'report_daily']);
 
-Route::post('/forgot-password', [AuthController::class, 'forgot_password'])->name('forgot-password');
-Route::post('/reset-password', [AuthController::class, 'reset_password'])->name('reset-password');

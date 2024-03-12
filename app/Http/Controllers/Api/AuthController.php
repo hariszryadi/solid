@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Password;
 use Validator;
 
@@ -19,7 +20,7 @@ class AuthController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('jwt', ['except' => ['login', 'register', 'verify', 'resend', 'category', 'organization', 'forgot_password']]);
+        $this->middleware('jwt', ['except' => ['login', 'register', 'resend', 'category', 'organization', 'forgot_password']]);
     }
 
     /**
@@ -33,11 +34,11 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'password' => 'required|string|min:6',
             ], [
-                'email.required' => 'Email harus diisi',
-                'email.email' => 'Email harus berupa alamat email yang valid',
-                'password.required' => 'Password harus diisi',
-                'password.string' => 'Password harus bertipe string',
-                'password.min' => 'Password tidak boleh kurang dari :min karakter',
+                'email.required' => 'Email harus diisi.',
+                'email.email' => 'Email harus berupa alamat email yang valid.',
+                'password.required' => 'Password harus diisi.',
+                'password.string' => 'Password harus bertipe string.',
+                'password.min' => 'Password tidak boleh kurang dari :min karakter.',
             ]);
 
             if($validator->fails()){
@@ -50,7 +51,7 @@ class AuthController extends Controller
             if (!$token = Auth::guard('api')->attempt($validator->validated())) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Unauthorized'
+                    'message' => 'Unauthorized.'
                 ], 400);
             }
 
@@ -77,22 +78,22 @@ class AuthController extends Controller
                 'role' => 'required|in:user,pic',
                 'organization' => 'required|exists:organizations,id'
             ], [
-                'name.required' => 'Nama harus diisi',
-                'name.string' => 'Nama harus bertipe string',
-                'name.between' => 'Nama harus minimal :min karakter dan maksimal :max karakter',
-                'email.required' => 'Email harus diisi',
-                'email.string' => 'Email harus bertipe string',
-                'email.email' => 'Email harus berupa alamat email yang valid',
-                'email.max' => 'Email tidak boleh melebihi :max karakter',
-                'email.unique' => 'Email sudah digunakan',
-                'password.required' => 'Password harus diisi',
-                'password.string' => 'Password harus bertipe string',
-                'password.confirmed' => 'Password konfirmasi tidak cocok',
-                'password.min' => 'Password tidak boleh kurang dari :min karakter',
-                'role.required' => 'Role harus diisi',
-                'role.in' => 'Role harus valid',
-                'organization.required' => 'Instansi harus diisi',
-                'organization.exists' => 'Instansi harus valid',
+                'name.required' => 'Nama harus diisi.',
+                'name.string' => 'Nama harus bertipe string.',
+                'name.between' => 'Nama harus minimal :min karakter dan maksimal :max karakter.',
+                'email.required' => 'Email harus diisi.',
+                'email.string' => 'Email harus bertipe string.',
+                'email.email' => 'Email harus berupa alamat email yang valid.',
+                'email.max' => 'Email tidak boleh melebihi :max karakter.',
+                'email.unique' => 'Email sudah digunakan.',
+                'password.required' => 'Password harus diisi.',
+                'password.string' => 'Password harus bertipe string.',
+                'password.confirmed' => 'Password konfirmasi tidak cocok.',
+                'password.min' => 'Password tidak boleh kurang dari :min karakter.',
+                'role.required' => 'Role harus diisi.',
+                'role.in' => 'Role harus valid.',
+                'organization.required' => 'Instansi harus diisi.',
+                'organization.exists' => 'Instansi harus valid.',
             ]);
 
             if($validator->fails()){
@@ -111,7 +112,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Registrasi akun berhasil, silahkan check email',
+                'message' => 'Registrasi akun berhasil, silahkan check email.',
                 'data' => $account
             ], 200);
         } catch (\Exception $e) {
@@ -130,7 +131,10 @@ class AuthController extends Controller
     public function logout() {
         try {
             Auth::guard('api')->logout();
-            return response()->json(['message' => 'Akun berhasil melakukan logout'], 200);
+            return response()->json([
+                'success' => true,
+                'message' => 'Akun berhasil melakukan logout.'
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -170,7 +174,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Sukses mendapatkan data account',
+                'message' => 'Sukses mendapatkan data account.',
                 'data' => $account
             ], 200);
         } catch (\Exception $e) {
@@ -206,12 +210,18 @@ class AuthController extends Controller
     public function resend($account_id) {
         $account = Account::find($account_id);
         if ($account->email_verified_at != null) {
-            return response()->json(['message' => 'Email sudah terverifikasi.'], 400);
+            return response()->json([
+                'success' => false,
+                'message' => 'Email sudah terverifikasi.'
+            ], 400);
         }
 
         $account->sendEmailVerificationNotification();
 
-        return response()->json(['message' => 'Email verifikasi berhasil dikirim']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Email verifikasi berhasil dikirim.'
+        ], 200);
     }
 
     /**
@@ -226,7 +236,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Sukses mendapatkan data kategori',
+                'message' => 'Sukses mendapatkan data kategori.',
                 'data' => $categories
             ], 200);
         } catch (\Exception $e) {
@@ -249,9 +259,9 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Sukses mendapatkan data instansi',
+                'message' => 'Sukses mendapatkan data instansi.',
                 'data' => $organizaions
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -272,9 +282,9 @@ class AuthController extends Controller
             $validator = Validator::make($request->all(), [
                 'email' => 'required|string|email',
             ], [
-                'email.required' => 'Email harus diisi',
-                'email.string' => 'Email harus bertipe string',
-                'email.email' => 'Email harus berupa alamat email yang valid',
+                'email.required' => 'Email harus diisi.',
+                'email.string' => 'Email harus bertipe string.',
+                'email.email' => 'Email harus berupa alamat email yang valid.',
             ]);
 
             if($validator->fails()){
@@ -289,7 +299,7 @@ class AuthController extends Controller
             if (!$user) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Akun tidak ditemukan'
+                    'message' => 'Akun tidak ditemukan.'
                 ], 400);
             }
 
@@ -301,7 +311,7 @@ class AuthController extends Controller
             if ($response === Password::RESET_LINK_SENT) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Email reset password berhasil dikirim',
+                    'message' => 'Email reset password berhasil dikirim.',
                 ], 200);
             } else {
                 return response()->json([
@@ -310,6 +320,87 @@ class AuthController extends Controller
                 ], 400);
             }
 
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Update profile.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update_profile(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'account_id' => 'required',
+                'name' => 'required|string|between:2,100',
+                'avatar' => 'nullable|sometimes|image|mimes:jpeg,png,jpg|max:2000',
+                'organization' => 'required|exists:organizations,id',
+                'password' => 'nullable|sometimes|string|min:6',
+            ], [
+                'account.required' => 'Akun harus diisi',
+                'name.required' => 'Nama harus diisi.',
+                'name.string' => 'Nama harus bertipe string.',
+                'name.between' => 'Nama harus minimal :min karakter dan maksimal :max karakter.',
+                'avatar.image' => 'Avatar harus berupa gambar',
+                'avatar.mimes' => 'Avatar harus berkestensi :mimes.',
+                'avatar.max' => 'Avatar tidak boleh melebihi ukuran :max kb.',
+                'organization.required' => 'Instansi harus diisi.',
+                'organization.exists' => 'Instansi harus valid.',
+                'password.string' => 'Password harus bertipe string.',
+                'password.min' => 'Password tidak boleh kurang dari :min karakter.'
+            ]);
+
+            if($validator->fails()){
+                return response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first()
+                ], 400);
+            }
+
+            $account = Account::find($request->account_id);
+            if (!$account) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akun tidak ditemukan.'
+                ], 400);
+            }
+
+            $avatar = $account->avatar;
+            $password = $account->password;
+
+            if ($request->has('avatar') && $request->avatar != null) {
+                $imageName = time().'.'.$request->avatar->extension();
+                $request->avatar->move(public_path('uploads/avatar'), $imageName);
+                $avatar = 'uploads/avatar' . '/' . $imageName;
+
+                $file_path = public_path() . '/' . $account->avatar;
+                if (File::exists($file_path) && ($account->avatar != '' || $account->avatar != null)) {
+                    unlink($file_path);
+                }
+            }
+
+            if ($request->has('password')) {
+                $password = bcrypt($request->password);
+            }
+
+            $account->update([
+                'name' => $request->name,
+                'organization_id' => $request->organization,
+                'password' => $password,
+                'avatar' => $avatar
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Profil berhasil diupdate.',
+                'data' => $account
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
