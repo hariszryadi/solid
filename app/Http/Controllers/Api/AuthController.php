@@ -8,8 +8,8 @@ use App\Models\Category;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use Validator;
-use JWTAuth;
 
 class AuthController extends Controller
 {
@@ -19,7 +19,7 @@ class AuthController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('jwt', ['except' => ['login', 'register', 'verify', 'resend', 'category', 'organization']]);
+        $this->middleware('jwt', ['except' => ['login', 'register', 'verify', 'resend', 'category', 'organization', 'forgot_password']]);
     }
 
     /**
@@ -201,25 +201,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Verify email.
-     */
-    public function verify($account_id, Request $request) {
-        if (!$request->hasValidSignature()) {
-            // return response()->json(['message' => 'Invalid/Expired url provided.'], 401);
-            return view('email.verify-email-failed', ['message' => 'Email gagal diverifikasi.', 'sub_message' => 'Silahkan hubungi Administrator Aplikasi SOLID']);
-        }
-
-        $account = Account::findOrFail($account_id);
-
-        if (!$account->hasVerifiedEmail()) {
-            $account->markEmailAsVerified();
-        }
-
-        // return response()->json(['message' => 'Email berhasil diverifikasi.']);
-        return view('email.verify-email-success', ['message' => 'Email berhasil diverifikasi.', 'sub_message' => 'Silahkan buka kembail Aplikasi SOLID']);
-    }
-
-    /**
      * Resend verify email.
      */
     public function resend($account_id) {
@@ -271,6 +252,64 @@ class AuthController extends Controller
                 'message' => 'Sukses mendapatkan data instansi',
                 'data' => $organizaions
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    /**
+     * Forgot password.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function forgot_password(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|string|email',
+            ], [
+                'email.required' => 'Email harus diisi',
+                'email.string' => 'Email harus bertipe string',
+                'email.email' => 'Email harus berupa alamat email yang valid',
+            ]);
+
+            if($validator->fails()){
+                return response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first()
+                ], 400);
+            }
+
+            $user = Account::where('email', $request->email)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akun tidak ditemukan'
+                ], 400);
+            }
+
+
+            $response = Password::broker('accounts')->sendResetLink(
+                $request->only('email')
+            );
+
+            if ($response === Password::RESET_LINK_SENT) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Email reset password berhasil dikirim',
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => trans($response)
+                ], 400);
+            }
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

@@ -23,18 +23,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontEndController::class, 'index'])->name('index');
 Route::get('/user/register', [FrontEndController::class, 'register'])->name('user.register');
-
-Route::get('/verify-email-success', function () {
-    return view('email.verify-email-success');
-});
-
-Route::get('/verify-email-failed', function () {
-    return view('email.verify-email-failed');
-});
-
-Route::get('/user/login', function () {
-    return view('frontend.login');
-})->name('user.login');
+Route::get('/user/login', [FrontEndController::class, 'login'])->name('user.login');
+Route::get('/email/verify/{id}', [FrontEndController::class, 'verify'])->name('verification.verify');
+Route::get('/verify-email-success', [FrondEndController::class, 'verify_success']);
+Route::get('/verify-email-success', [FrondEndController::class, 'verify_failed']);
+Route::post('/reset-password', [FrontEndController::class, 'reset_password'])->name('reset.password');
 
 Auth::routes();
 
