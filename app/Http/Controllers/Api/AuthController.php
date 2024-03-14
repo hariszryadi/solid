@@ -45,14 +45,14 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => $validator->errors()->first()
-                ], 400);
+                ], 200);
             }
 
             if (!$token = Auth::guard('api')->attempt($validator->validated())) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Unauthorized.'
-                ], 400);
+                ], 200);
             }
 
             return $this->createNewToken($token);
@@ -100,7 +100,7 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => $validator->errors()->first()
-                ], 400);
+                ], 200);
             }
 
             $account = Account::create(array_merge(
@@ -197,6 +197,8 @@ class AuthController extends Controller
         $account->load('organization');
 
         return response()->json([
+            'success' => true,
+            'message' => 'Login berhasil',
             'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
@@ -213,7 +215,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Email sudah terverifikasi.'
-            ], 400);
+            ], 200);
         }
 
         $account->sendEmailVerificationNotification();
@@ -291,7 +293,7 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => $validator->errors()->first()
-                ], 400);
+                ], 200);
             }
 
             $user = Account::where('email', $request->email)->first();
@@ -300,9 +302,8 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Akun tidak ditemukan.'
-                ], 400);
+                ], 200);
             }
-
 
             $response = Password::broker('accounts')->sendResetLink(
                 $request->only('email')
@@ -317,7 +318,7 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => trans($response)
-                ], 400);
+                ], 200);
             }
 
         } catch (\Exception $e) {
@@ -360,7 +361,7 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => $validator->errors()->first()
-                ], 400);
+                ], 200);
             }
 
             $account = Account::find($request->account_id);
@@ -368,7 +369,7 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Akun tidak ditemukan.'
-                ], 400);
+                ], 200);
             }
 
             $avatar = $account->avatar;

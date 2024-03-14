@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card" style="width: 400px; z-index: 1">
+    <div class="card" style="width: 400px; z-index: 1; margin-top: 280px;">
         <div class="card-body">
             <a href="#" class="text-nowrap logo-img text-center d-block py-3 w-100">
                 <img src="{{ asset('assets/images/logos/logo.png') }}" width="180" alt="">
@@ -45,7 +45,7 @@
                     </select>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <a class="btn btn-light w-50 py-8 fs-4 m-2 rounded-2">Kembali</a>
+                    <a href="{{ route('user.login') }}" class="btn btn-light w-50 py-8 fs-4 m-2 rounded-2">Kembali</a>
                     <button type="submit" class="btn btn-primary w-50 py-8 fs-4 m-2 rounded-2">Daftar</button>
                 </div>
             </form>

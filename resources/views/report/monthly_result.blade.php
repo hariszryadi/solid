@@ -9,8 +9,13 @@
           </ul>
         <div class="card">
             <div class="card-body">
-                <a href="{{ route('report-monthly') }}" class="btn btn-warning">Kembali</a>
-                <button type="button" class="btn btn-danger" id="printPdf" disabled>Print PDF</button>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex" style="gap: 4px">
+                        <a href="{{ route('report-monthly') }}" class="btn btn-warning">Kembali</a>
+                        <button type="button" class="btn btn-danger" id="printPdf" disabled>Download PDF</button>
+                    </div>
+                    <p>{{ $month . ' ' . $year }}</p>
+                </div>
                 <div id="chart" class="mt-5 d-flex align-items-center justify-content-center"></div>
             </div>
         </div>
@@ -25,6 +30,9 @@
     var organic = {!! json_encode($organic) !!};
     var anorganic = {!! json_encode($anorganic) !!};
     var b3 = {!! json_encode($b3) !!};
+    var month = {!! json_encode($month) !!};
+    var year = {!! json_encode($year) !!};
+    var organization = {!! json_encode($organization) !!};
     var options = {
         series: [{
           name: 'Organik',
@@ -92,23 +100,23 @@
 
     $('#printPdf').on('click', function () {
         chart.dataURI().then(({ imgURI, blob }) => {
-            var pdf = new jsPDF('landscape', 'pt', 'a4');
+            var pdf = new jsPDF('landscape', 'pt', 'a5');
             var pdfWidth = pdf.internal.pageSize.getWidth();
             var pdfHeight = pdf.internal.pageSize.getHeight();
-            var imgWidth = 750;
-            var imgHeight = 250;
-            var imgX = (pdfWidth - imgWidth) / 2;
-            var imgY = (pdfHeight - imgHeight) / 3;
+            var imgWidth = 500;
+            var imgHeight = 200;
+            var imgX = 50;
+            var imgY = 50;
             pdf.addImage(imgURI, 'PNG', imgX, imgY, imgWidth, imgHeight);
 
-            var text = 'Debit Volume Sampah Harian berdasarkan Kategorinya';
+            var text = 'Report volume debit sampah ' + organization + ' Bulan ' + month + ' Tahun ' + year;
             var textWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-            var textX = imgX + (imgWidth - textWidth) / 2;
-            var textY = imgY + -30;
+            var textX = imgX + 10;
+            var textY = imgY - 5;
             pdf.setTextColor(0, 0, 0);
-            pdf.setFontSize(16);
+            pdf.setFontSize(11);
             pdf.text(text, textX, textY);
-            pdf.save('report-daily.pdf');
+            pdf.save('report-monthly.pdf');
         })
     })
 

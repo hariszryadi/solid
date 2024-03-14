@@ -72,15 +72,24 @@ class ReportController extends Controller
         $categoryArr = [];
         $seriesArr = [];
 
+        $organization = Organization::find($request->organization);
+        $parse = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
+        $date = Carbon::parse($parse)->isoFormat('dddd, D MMMM YYYY');
         $categories = Category::orderBy('id')->get();
         foreach ($categories as $key => $category) {
-            $transaction = Transaction::where('category_id', $category->id)->where('organization_id', $request->organization)->whereDate('created_at', Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d'))->sum('weight');
-            
+            $transaction = Transaction::where('category_id', $category->id)->where('organization_id', $request->organization)->whereDate('created_at', $parse)->sum('weight');
+
             array_push($categoryArr, $category->name);
             array_push($seriesArr, floatval($transaction));
         }
 
-        return view('report.daily_result', ['title' => $this->title, 'categories' => $categoryArr, 'series' => $seriesArr]);
+        return view('report.daily_result', [
+            'title' => $this->title,
+            'categories' => $categoryArr,
+            'series' => $seriesArr,
+            'organization' => $organization->name,
+            'date' => $date
+        ]);
     }
 
     /**
@@ -108,6 +117,7 @@ class ReportController extends Controller
             'year.required' => 'Tahun harus diisi'
         ]);
 
+        $organization = Organization::find($request->organization);
         $startDate = Carbon::create($request->year, $request->month, 1, 0, 0, 0);
         $endDate = $startDate->copy()->endOfMonth();
         $currentDate = $startDate->copy();
@@ -137,6 +147,15 @@ class ReportController extends Controller
             $currentDate->addDay();
         }
 
-        return view('report.monthly_result', ['title' => $this->title, 'dates' => $dates, 'organic' => $organic, 'anorganic' => $anorganic, 'b3' => $b3]);
+        return view('report.monthly_result', [
+            'title' => $this->title,
+            'dates' => $dates,
+            'organic' => $organic,
+            'anorganic' => $anorganic,
+            'b3' => $b3,
+            'month' => $this->months[$request->month],
+            'year' => $request->year,
+            'organization' => $organization->name
+        ]);
     }
 }

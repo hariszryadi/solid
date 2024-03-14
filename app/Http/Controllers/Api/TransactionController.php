@@ -44,7 +44,7 @@ class TransactionController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => $validator->errors()->first()
-                ], 400);
+                ], 200);
             }
 
             $account = Account::find($request->account);

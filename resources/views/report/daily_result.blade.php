@@ -9,9 +9,14 @@
           </ul>
         <div class="card">
             <div class="card-body">
-                <a href="{{ route('report-daily') }}" class="btn btn-warning">Kembali</a>
-                <button type="button" class="btn btn-danger" id="printPdf" disabled>Print PDF</button>
-                <div id="chart" class="mt-5"></div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex" style="gap: 4px">
+                        <a href="{{ route('report-daily') }}" class="btn btn-warning">Kembali</a>
+                        <button type="button" class="btn btn-danger" id="printPdf" disabled>Download PDF</button>
+                    </div>
+                    <p>{{ $date }}</p>
+                </div>
+                <div id="chart" class="mt-5 d-flex align-items-center justify-content-center"></div>
             </div>
         </div>
     </div>
@@ -23,6 +28,8 @@
 <script>
     var categories = {!! json_encode($categories) !!};
     var series = {!! json_encode($series) !!};
+    var organization = {!! json_encode($organization) !!};
+    var date = {!! json_encode($date) !!};
     var options = {
         series: series,
         chart: {
@@ -53,23 +60,23 @@
 
     $('#printPdf').on('click', function () {
         chart.dataURI().then(({ imgURI, blob }) => {
-            var pdf = new jsPDF('landscape', 'pt', 'a4');
+            var pdf = new jsPDF('landscape', 'pt', 'a5');
             var pdfWidth = pdf.internal.pageSize.getWidth();
             var pdfHeight = pdf.internal.pageSize.getHeight();
-            var imgWidth = 325;
-            var imgHeight = 200;
-            var imgX = (pdfWidth - imgWidth) / 2;
-            var imgY = (pdfHeight - imgHeight) / 2;
-            pdf.addImage(imgURI, 'SVG', imgX, imgY, imgWidth, imgHeight);
+            var imgWidth = 280;
+            var imgHeight = 180;
+            var imgX = 50;
+            var imgY = 50;
+            pdf.addImage(imgURI, 'PNG', imgX, imgY, imgWidth, imgHeight);
 
-            var text = 'Debit Volume Sampah Harian berdasarkan Kategorinya';
+            var text = 'Report volume debit sampah ' + organization + ' ' + date;
             var textWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-            var textX = imgX + (imgWidth - textWidth) / 2;
-            var textY = imgY + -30;
+            var textX = imgX + 10;
+            var textY = imgY - 5;
             pdf.setTextColor(0, 0, 0);
-            pdf.setFontSize(16);
+            pdf.setFontSize(11);
             pdf.text(text, textX, textY);
-            pdf.save('report-daily.pdf');
+            pdf.save('report-monthly.pdf');
         })
     })
 </script>
