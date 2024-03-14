@@ -1,96 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
-<!--  Row 1 -->
-<div class="row">
-    <div class="col-lg-8 d-flex align-items-strech">
-        <div class="card w-100">
-            <div class="card-body">
-                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                    <div class="mb-3 mb-sm-0">
-                        <h5 class="card-title fw-semibold">Sales Overview</h5>
-                    </div>
-                    <div>
-                        <select class="form-select">
-                            <option value="1">March 2023</option>
-                            <option value="2">April 2023</option>
-                            <option value="3">May 2023</option>
-                            <option value="4">June 2023</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="chart"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="row">
-            <div class="col-lg-12">
-                <!-- Yearly Breakup -->
-                <div class="card overflow-hidden">
+<div class="row mt-5">
+    <div class="col-lg-12">
+        <div class="row" style="display: flex; align-items: stretch;">
+            <div class="col-lg-3">
+                <div class="card overflow-hidden" style="height: 85%;">
                     <div class="card-body p-4">
-                        <h5 class="card-title mb-9 fw-semibold">Yearly Breakup</h5>
+                        <h5 class="card-title mb-9 fw-semibold">Persentase Error</h5>
                         <div class="row align-items-center">
-                            <div class="col-8">
-                                <h4 class="fw-semibold mb-3">$36,358</h4>
-                                <div class="d-flex align-items-center mb-3">
-                                    <span
-                                        class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                                        <i class="ti ti-arrow-up-left text-success"></i>
-                                    </span>
-                                    <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                                    <p class="fs-3 mb-0">last year</p>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="me-4">
-                                        <span
-                                            class="round-8 bg-primary rounded-circle me-2 d-inline-block"></span>
-                                        <span class="fs-2">2023</span>
-                                    </div>
-                                    <div>
-                                        <span
-                                            class="round-8 bg-light-primary rounded-circle me-2 d-inline-block"></span>
-                                        <span class="fs-2">2023</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="d-flex justify-content-center">
-                                    <div id="breakup"></div>
-                                </div>
+                            <div class="col-12">
+                                <h1 class="fw-semibold mb-3">{{ $error }} %</h1>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-12">
-                <!-- Monthly Earnings -->
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row alig n-items-start">
-                            <div class="col-8">
-                                <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
-                                <h4 class="fw-semibold mb-3">$6,820</h4>
-                                <div class="d-flex align-items-center pb-1">
-                                    <span
-                                        class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                                        <i class="ti ti-arrow-down-right text-danger"></i>
-                                    </span>
-                                    <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                                    <p class="fs-3 mb-0">last year</p>
+            <div class="col-lg-6">
+                <div class="card overflow-hidden" style="height: 85%;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-9 fw-semibold">Volume Debit Harian</h5>
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <h4 class="fw-semibold mb-3">{{ $sum }} kg</h4>
+                                <div class="d-flex align-items-center mb-3">
+                                    <p class="fs-3 mb-0">{{ $date }}</p>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <div class="d-flex justify-content-end">
-                                    <div
-                                        class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                        <i class="ti ti-currency-dollar fs-6"></i>
-                                    </div>
+                            <div class="col-6">
+                                <div class="d-flex justify-content-center">
+                                    <div id="chart"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="earning"></div>
                 </div>
             </div>
         </div>
@@ -100,111 +43,67 @@
     <div class="col-lg-12 d-flex align-items-stretch">
         <div class="card w-100">
             <div class="card-body p-4">
-                <h5 class="card-title fw-semibold mb-4">Recent Transactions</h5>
+                <h5 class="card-title fw-semibold mb-4">Transaksi terakhir</h5>
                 <div class="table-responsive">
                     <table class="table text-nowrap mb-0 align-middle">
                         <thead class="text-dark fs-4">
                             <tr>
                                 <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">Id</h6>
+                                    <h6 class="fw-semibold mb-0">#</h6>
                                 </th>
                                 <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">Assigned</h6>
+                                    <h6 class="fw-semibold mb-0">Tanggal</h6>
                                 </th>
                                 <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">Name</h6>
+                                    <h6 class="fw-semibold mb-0">Nama</h6>
                                 </th>
                                 <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">Priority</h6>
+                                    <h6 class="fw-semibold mb-0">Instansi</h6>
                                 </th>
                                 <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">Budget</h6>
+                                    <h6 class="fw-semibold mb-0">Berat</h6>
+                                </th>
+                                <th class="border-bottom-0 text-center">
+                                    <h6 class="fw-semibold mb-0">Kategori</h6>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">1</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-1">Sunil Joshi</h6>
-                                    <span class="fw-normal">Web Designer</span>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-0 fw-normal">Elite Admin</p>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-primary rounded-3 fw-semibold">Low</span>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 fs-4">$3.9</h6>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">2</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-1">Andrew McDownland</h6>
-                                    <span class="fw-normal">Project Manager</span>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-0 fw-normal">Real Homes WP Theme</p>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span
-                                            class="badge bg-secondary rounded-3 fw-semibold">Medium</span>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 fs-4">$24.5k</h6>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">3</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-1">Christopher Jamil</h6>
-                                    <span class="fw-normal">Project Manager</span>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-0 fw-normal">MedicalPro WP Theme</p>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-danger rounded-3 fw-semibold">High</span>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 fs-4">$12.8k</h6>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">4</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-1">Nirav Joshi</h6>
-                                    <span class="fw-normal">Frontend Engineer</span>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-0 fw-normal">Hosting Press HTML</p>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span
-                                            class="badge bg-success rounded-3 fw-semibold">Critical</span>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 fs-4">$2.4k</h6>
-                                </td>
-                            </tr>
+                            @php
+                                $i = 1;
+                            @endphp
+                            @foreach ($transactions as $item)
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <h6 class="fw-semibold">{{ $i++ }}</h6>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="fw-normal">{{ $item->created_at->format('d M Y') }}</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="fw-normal">{{ $item->account->name }}</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="fw-normal">{{ $item->organization->name }}</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="fw-normal">{{ $item->weight }} kg</p>
+                                    </td>
+                                    <td class="border-bottom-0 d-flex justify-content-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            @if ($item->category_id == 1)
+                                                <span class="badge bg-info rounded-3 fw-semibold">{{ $item->category->name }}</span>
+                                            @endif
+                                            @if ($item->category_id == 2)
+                                                <span class="badge bg-danger rounded-3 fw-semibold">{{ $item->category->name }}</span>
+                                            @endif
+                                            @if ($item->category_id == 3)
+                                                <span class="badge bg-warning rounded-3 fw-semibold">{{ $item->category->name }}</span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -215,5 +114,38 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('assets/js/dashboard.js') }}"></script>
+<script>
+    var categories = {!! json_encode($categories) !!};
+    var series = {!! json_encode($series) !!};
+    var options = {
+        series: series,
+        chart: {
+          width: 200,
+          type: 'pie',
+          events: {
+            mounted: function(chartContext, config) {
+              $('#printPdf').removeAttr('disabled')
+            }
+          }
+        },
+        labels: categories,
+        legend: {
+            show: false
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+</script>
 @endsection

@@ -63,20 +63,20 @@
             var pdf = new jsPDF('landscape', 'pt', 'a5');
             var pdfWidth = pdf.internal.pageSize.getWidth();
             var pdfHeight = pdf.internal.pageSize.getHeight();
-            var imgWidth = 280;
-            var imgHeight = 180;
+            var imgWidth = 250;
+            var imgHeight = 150;
             var imgX = 50;
             var imgY = 50;
             pdf.addImage(imgURI, 'PNG', imgX, imgY, imgWidth, imgHeight);
 
-            var text = 'Report volume debit sampah ' + organization + ' ' + date;
+            var text = 'Diagram volume debit sampah ' + organization + ' ' + date;
             var textWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
             var textX = imgX + 10;
             var textY = imgY - 5;
             pdf.setTextColor(0, 0, 0);
             pdf.setFontSize(11);
             pdf.text(text, textX, textY);
-            pdf.save('report-monthly.pdf');
+            pdf.save('report-daily.pdf');
         })
     })
 </script>

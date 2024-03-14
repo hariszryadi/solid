@@ -109,7 +109,7 @@
             var imgY = 50;
             pdf.addImage(imgURI, 'PNG', imgX, imgY, imgWidth, imgHeight);
 
-            var text = 'Report volume debit sampah ' + organization + ' Bulan ' + month + ' Tahun ' + year;
+            var text = 'Diagram volume debit sampah ' + organization + ' Bulan ' + month + ' Tahun ' + year;
             var textWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
             var textX = imgX + 10;
             var textY = imgY - 5;
